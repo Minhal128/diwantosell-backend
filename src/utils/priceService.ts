@@ -378,15 +378,11 @@ export const getMultiplePrices = async (symbols: string[]): Promise<Record<strin
     await Promise.all(symbols.map(async (symbol) => {
         if (priceMap[symbol]) return; // Already fetched
         try {
-            const coin = symbol.split('/')[0].toUpperCase();
-            // For non-crypto assets, use getStockPrice directly to avoid wrong CoinGecko hits
-            if (!COINGECKO_ID_MAP[coin]) {
-                const sp = await getStockPrice(coin);
-                priceMap[symbol] = sp > 0 ? sp : 0;
-            } else {
-                const price = await getCryptoPrice(symbol);
-                priceMap[symbol] = price;
-            }
+            // Route through getCryptoPrice for all symbols.
+            // It already handles stocks/commodities via Yahoo first and then
+            // crypto exchanges for altcoins that are not in COINGECKO_ID_MAP.
+            const price = await getCryptoPrice(symbol);
+            priceMap[symbol] = price;
         } catch (error) {
             priceMap[symbol] = 0;
         }
@@ -442,15 +438,11 @@ export const getDetailedMarketData = async (symbols: string[]): Promise<Record<s
     for (const symbol of symbols) {
         if (!result[symbol]) {
             try {
-                const coin = symbol.split('/')[0].toUpperCase();
-                if (!COINGECKO_ID_MAP[coin]) {
-                    // Stock or commodity — must use Yahoo Finance, never CoinGecko
-                    const stockPx = await getStockPrice(coin);
-                    result[symbol] = { price: stockPx, change24h: 0, volume24h: 0, marketCap: 0 };
-                } else {
-                    const price = await getCryptoPrice(symbol);
-                    result[symbol] = { price, change24h: 0, volume24h: 0, marketCap: 0 };
-                }
+                // Route through getCryptoPrice for all symbols.
+                // This avoids misclassifying altcoins as stocks while still keeping
+                // stock/commodity Yahoo routing inside getCryptoPrice.
+                const price = await getCryptoPrice(symbol);
+                result[symbol] = { price, change24h: 0, volume24h: 0, marketCap: 0 };
             } catch {
                 result[symbol] = { price: 0, change24h: 0, volume24h: 0, marketCap: 0 };
             }
