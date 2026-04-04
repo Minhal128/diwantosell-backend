@@ -4,9 +4,6 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-// import session from 'express-session';
-// import passport from 'passport';
-// import './config/passport'; // Google OAuth disabled
 import { errorHandler, notFound } from './middleware/errorMiddleware';
 import adminRoutes from './routes/adminRoutes';
 import userRoutes from './routes/userRoutes';
@@ -25,17 +22,6 @@ app.use(cors({
 app.use(morgan('dev'));
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
-
-// Google OAuth disabled
-/*
-app.use(session({
-    secret: 'diwan_finance_secret_key_12345',
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-*/
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to DiwanFinance API' });

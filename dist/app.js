@@ -8,9 +8,6 @@ const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
-// import session from 'express-session';
-// import passport from 'passport';
-// import './config/passport'; // Google OAuth disabled
 const errorMiddleware_1 = require("./middleware/errorMiddleware");
 const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
@@ -26,16 +23,6 @@ app.use((0, cors_1.default)({
 app.use((0, morgan_1.default)('dev'));
 app.use(express_1.default.json({ limit: '5mb' }));
 app.use(express_1.default.urlencoded({ extended: true, limit: '5mb' }));
-// Google OAuth disabled
-/*
-app.use(session({
-    secret: 'diwan_finance_secret_key_12345',
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-*/
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to DiwanFinance API' });
 });
