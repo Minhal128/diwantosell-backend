@@ -252,15 +252,6 @@ export const getCryptoPrice = async (symbol: string): Promise<number> => {
         }
     }
 
-    // 3. Try Stocks/Commodities fallback for known crypto (in case crypto APIs fail)
-    if (isKnownCrypto) {
-        const stockPrice = await getStockPrice(coin);
-        if (stockPrice > 0) {
-            priceCache[cacheKey] = { price: stockPrice, timestamp: Date.now() };
-            return stockPrice;
-        }
-    }
-
     // 3. Try Binance Endpoints
     const binanceUrls = [
         `https://api.binance.com/api/v3/ticker/price?symbol=${formattedSymbol}`,

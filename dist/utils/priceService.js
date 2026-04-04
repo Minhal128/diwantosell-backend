@@ -242,14 +242,6 @@ const getCryptoPrice = async (symbol) => {
             console.warn("CoinGecko Pro fetch failed:", e instanceof Error ? e.message : e);
         }
     }
-    // 3. Try Stocks/Commodities fallback for known crypto (in case crypto APIs fail)
-    if (isKnownCrypto) {
-        const stockPrice = await (0, exports.getStockPrice)(coin);
-        if (stockPrice > 0) {
-            priceCache[cacheKey] = { price: stockPrice, timestamp: Date.now() };
-            return stockPrice;
-        }
-    }
     // 3. Try Binance Endpoints
     const binanceUrls = [
         `https://api.binance.com/api/v3/ticker/price?symbol=${formattedSymbol}`,
